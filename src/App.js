@@ -9,23 +9,43 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadTodoList = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ data: { todoList: todoList } });
-      }, 2000);
-    });
-
-    loadTodoList
-      .then((result) => {
-        // Update the todoList state with the list from the result object
-        setTodoList(result.data.todoList);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-      });
+    fetchData();
   }, []);
+
+  async function fetchData() {
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+        },
+      };
+
+      const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`;
+
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Data:", data);
+
+      const todos = data.records.map((record) => ({
+        title: record.fields.title,
+        id: record.id,
+      }));
+
+      console.log("Todos:", todos);
+
+      setTodoList(todos);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error.message);
+      setIsLoading(false);
+    }
+  }
 
   function addTodo(newTodo) {
     setTodoList([...todoList, newTodo]);
