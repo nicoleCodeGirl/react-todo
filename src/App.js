@@ -30,7 +30,7 @@ function App() {
       }
 
       const data = await response.json();
-      console.log("Data:", data);
+      console.log("Data:", data); // Print the API response data
 
       const todos = data.records.map((record) => ({
         title: record.fields.title,
