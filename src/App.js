@@ -57,20 +57,26 @@ function App() {
     setTodoList(updatedTodoList);
   }
 
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" exact>
-          <>
-            <h1>ToDo List</h1>
-            <AddTodoForm onAddTodo={addTodo} />
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : (
-              <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
-            )}
-          </>
+        <Route path="/" exact element={
+        <>
+        <h1>ToDo List</h1>
+        <AddTodoForm onAddTodo={addTodo} />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+        )}
+      </>
+        }> </Route>
+        <Route path="/new" element={
+          <h1>New ToDo List</h1>}> 
         </Route>
+         
+       
       </Routes>
     </BrowserRouter>
   );
